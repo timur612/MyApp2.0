@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+
+<body>
+    <nav>
+        <div class="nav-wrapper">
+
+            <a href="#" class="brand-logo">Logo</a>
+            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                <li><a href="sass.html">Sass</a></li>
+                <li><a href="badges.html">Components</a></li>
+                <li><a href="collapsible.html">JavaScript</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div id="div" class="row">
+
+    </div>
+    <div class="row ">
+        <div class="row"> <a href="posts.html" class="btn green darken-3">Все объявления</a></div>
+        <ul class="collapsible">
+            <li>
+                <div class="collapsible-header"><i class="material-icons">assignment</i>Активные работы</div>
+                <div class="collapsible-body" id="colap_div"><span id="act_sp">У вас пока нет активных работ</span></div>
+            </li>
+            <li>
+                <div class="collapsible-header"><i class="material-icons">assignment_turned_in</i>Сделанные работы</div>
+                <div class="collapsible-body"  id="colaps_div"><span id="done_sp">У вас пока нет сделанных работ</span></div>
+            </li>
+
+        </ul>
+
+    </div>
+</body>
+<script type="text/javascript" src=" https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $.ajax({
+            url: 'http://127.0.0.1:8000/sW',
+            success: function(data) {
+                console.log(data);
+                var div_n = document.createElement('div');
+                document.getElementById("div").appendChild(div_n);
+                div_n.className = "row left";
+                div_n.innerHTML = "<h5>Ваше имя: " + data[0]["name"] + "</h5>" + "<br>" + "<h5>Ваш телефон: " + data[0]["phone"] + "</h5>";
+            },
+            data: {
+                id: localStorage.user_id
+            }
+
+        })
+        $('.collapsible').collapsible();
+
+        $.ajax({
+            url: 'http://127.0.0.1:8000/myPost',
+            success: function(data) {
+                
+                for (var i = 0; i < data.length; i++) {
+                    document.getElementById("act_sp").innerHTML=" ";
+                    var div_r = document.createElement('div');
+                    document.getElementById("colap_div").appendChild(div_r);
+                    div_r.className = "row ";
+
+                    var div_col = document.createElement('div');
+                    div_r.appendChild(div_col);
+                    div_col.className = "col s12 m6 ";
+
+                    var div_co = document.createElement('div');
+                    div_col.appendChild(div_co);
+                    div_co.className = "card blue-grey darken-1 ";
+
+                    var div_car = document.createElement('div');
+                    div_co.appendChild(div_car);
+                    div_car.className = "card-content white-text ";
+                    div_car.innerHTML = "<p>" + data[i]["description"] + "</p>";
+
+                    var div_ac = document.createElement('div');
+                    div_co.appendChild(div_ac);
+                    div_ac.className = "card-action white-text ";
+                    div_ac.innerHTML = "<a>" + data[i]["phone"] + "</a>";
+
+
+
+                }
+                console.log(data);
+
+            },
+            data: {
+                user_id:localStorage.user_id,
+            }
+
+        })
+        
+            $.ajax({
+            url:"http://127.0.0.1:8000/donePostsForSw",
+            success:function(data){
+                 for (var i = 0; i < data.length; i++) {
+                    document.getElementById("done_sp").innerHTML=" ";
+                    var div_r = document.createElement('div');
+                    document.getElementById("colaps_div").appendChild(div_r);
+                    div_r.classList.add("row");
+
+                    var div_col = document.createElement('div');
+                    div_r.appendChild(div_col);
+                    div_col.className = "col s12 m6 ";
+
+                    var div_co = document.createElement('div');
+                    div_col.appendChild(div_co);
+                    div_co.className = "card blue-grey darken-1 ";
+
+                    var div_car = document.createElement('div');
+                    div_co.appendChild(div_car);
+                    div_car.className = "card-content white-text ";
+                    div_car.innerHTML = "<p>" + data[i]["description"] + "</p>" ;
+
+                   /* var div_ac = document.createElement('div');
+                    div_co.appendChild(div_ac);
+                    div_ac.className = "card-action white-text adverts ";
+                    div_ac.innerHTML = "<p></p>";*/
+                     
+                  
+                 }
+            },
+            data:{
+                user_id:localStorage.user_id,
+            }
+        })
+    });
+
+</script>
+
+</html>

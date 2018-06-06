@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<style>
+    .for_btn {}
+
+</style>
+
+<body>
+    <nav>
+        <div class="nav-wrapper">
+
+            <a href="#" class="brand-logo">Объявления</a>
+              <ul class="side-nav indigo lighten-1" id="mobile-demo">
+               
+                <li><i class="large material-icons" id="back">arrow_back</i></li>
+                
+            </ul>
+            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                <li><a href="sass.html">Sass</a></li>
+                <li><a href="badges.html">Components</a></li>
+                <li><a href="collapsible.html">JavaScript</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div id="div" class="row">
+
+    </div>
+</body>
+<script type="text/javascript" src=" https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $.ajax({
+            url: 'http://127.0.0.1:8000/post',
+            success: function(data) {
+                for (var i = 0; i < data.length; i++) {
+                    var div_r = document.createElement('div');
+                    document.body.appendChild(div_r);
+                    div_r.className = "row ";
+
+                    var div_col = document.createElement('div');
+                    div_r.appendChild(div_col);
+                    div_col.className = "col s12 m6 ";
+
+                    var div_co = document.createElement('div');
+                    div_col.appendChild(div_co);
+                    div_co.className = "card blue-grey darken-1 ";
+
+                    var div_car = document.createElement('div');
+                    div_co.appendChild(div_car);
+                    div_car.className = "card-content white-text ";
+                    div_car.innerHTML = "<p>" + data[i]["description"] + "</p>";
+
+                    var div_ac = document.createElement('div');
+                    div_co.appendChild(div_ac);
+                    div_ac.className = "card-action white-text ";
+                    div_ac.innerHTML = "<a>" + data[i]["phone"] + "</a>";
+
+                    var btn = document.createElement('button');
+                    div_col.appendChild(btn);
+                    btn.className = "btn green white-text for_btn";
+                    btn.innerHTML = "Принять"
+                    btn.post_id = data[i].id;
+                    btn.onclick = function() {
+                        location.reload()
+                        console.log(this.post_id);
+                        $.ajax({
+                            url: 'http://127.0.0.1:8000/upPost',
+                            success: function(data) {
+                                console.log(data);
+
+                            },
+                            data: {
+                                post_id: this.post_id,
+                                resp_id: localStorage.user_id,
+                                
+                            }
+                        })
+                    }
+
+                }
+                console.log(data);
+
+            },
+            data: {
+
+            }
+
+        })
+    });
+    $("#back").on('click', function() {
+            window.location = "index.html"
+        })
+
+    /* $("#btn_prin").on('click',function(){
+          $.ajax({
+             url: 'http://127.0.0.1:8000/post',
+             success: function(data) {
+
+                    console.log(data);
+                
+             },
+             data:{
+                 status:$("#btn_prin").val(),
+             }
+             
+         })
+     })*/
+
+</script>
+
+</html>

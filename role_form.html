@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <style>
+        #signIn {
+            display: none;
+        }
+        
+        #signUp {}
+        
+        #Back {}
+        
+        #select {}
+
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <div class="nav-wrapper">
+            <a class="white-text" id="Back"> <i class="large material-icons">arrow_back</i></a>
+            <a href="#" class="brand-logo">Logo</a>
+            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                <li><a href="sass.html">Sass</a></li>
+                <li><a href="badges.html">Components</a></li>
+                <li><a href="collapsible.html">JavaScript</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="row">
+        <div id="signUp">
+            <div class="row">
+
+                <div class="row">
+                    <div class="input-field col s6">
+                        <input id="name" type="text" class="validate">
+                        <label for="name">Введите имя</label>
+                    </div>
+                    <div class="input-field col s6">
+                        <input id="surname" type="text" class="validate">
+                        <label for="surname">Введите фамилию</label>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input id="phone" type="text" class="validate">
+                        <label for="phone">Телефон</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <select name="status" id="role">
+      <option value="" disabled selected>Выберите </option>
+      <option value="1">Ищу работу</option>
+      <option value="0">Ищу работника</option>
+     
+    </select>
+                </div>
+                <button class="btn" type="submit" id="reg">Дальше</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src=" https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+    <script>
+        $("#Back").on('click', function() {
+            window.location = "index.html"
+        })
+
+        $(document).ready(function() {
+            $('.sidenav').sidenav();
+            $('select').formSelect();
+            
+        });
+        $("#reg").on('click', function() {
+                   
+                    if ($("#name").val() == "" || $("#name").val() == " " || $("#phone").val() == "" || $("#phone").val() == " " || $("#surname").val() == "" || $("#surname").val() == " ") {
+                        alert("Ne vse zapolnil!")
+                    } else {
+                        $.ajax({
+                                url: 'http://127.0.0.1:8000/role',
+                                success: function(data) {
+                                    console.log(data);
+                                   if(data.role==0){
+                                        window.location="searchWorker.html"
+                                    }
+                                    else{
+                                         window.location="searchWork.html"
+                                    }
+                                },
+                                    data: {
+                                        name:$("#name").val(),
+                                        surname:$("#surname").val(),
+                                        phone:$("#phone").val(),
+                                        role:$("#role").val(),
+                                        userId: localStorage.user_id,
+                                    }
+                                })
+                        }
+                    })
+
+    </script>
+</body>
+
+</html>

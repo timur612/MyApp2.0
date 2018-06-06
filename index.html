@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <style>
+        #signIn {
+            display: none;
+        }
+        
+        #signUp {
+            display: none;
+        }
+        
+        #Back {
+            display: none;
+        }
+        
+        #select {}
+
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <div class="nav-wrapper">
+            <a class="white-text" id="Back"> <i class="large material-icons">arrow_back</i></a>
+            <a href="#" class="brand-logo">Logo</a>
+            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                <li><a href="sass.html">Sass</a></li>
+                <li><a href="badges.html">Components</a></li>
+                <li><a href="collapsible.html">JavaScript</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="row">
+
+        <div id="signIn">
+            <div class="input-field col s12">
+                <input id="log" type="text" class="validate">
+                <label for="log">Логин</label>
+            </div>
+            <div class="input-field col s12">
+                <input id="pass" type="password" class="validate">
+                <label for="pass">Пароль</label>
+            </div>
+            <button class="btn" type="submit" id="signBtn">Войти</button>
+            <button class="btn" type="submit" id="reg1">Ещё нет аккаунта?</button>
+        </div>
+        <div id="signUp">
+            <div class="row">
+
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input id="name" type="text" class="validate">
+                        <label for="name">Введите логин</label>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input id="password" type="password" class="validate">
+                        <label for="password">Пароль</label>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input id="pho" type="email" class="validate">
+                        <label for="pho">почtа</label>
+                    </div>
+                </div>
+                <div class="row">
+
+                </div>
+                <button class="btn" type="submit" id="reg">Зарегистрироваться</button>
+                
+            </div>
+        </div>
+
+    </div>
+    <script type="text/javascript" src=" https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            if (localStorage.hasOwnProperty("user_id")) {
+                $.ajax({
+                         url: 'http://127.0.0.1:8000/getRole',
+                                success: function(data) {
+                                    console.log(data);
+                                    if(localStorage==0){
+                                       window.location='index.html';
+                                    }
+                                    else{
+                                       if(data[0]["role"]==0){
+                                       window.location='searchWorker.html';
+                                    }
+                                        else{
+                                         window.location='searchWork.html';
+                                    }
+                                    }
+                                },
+                                                    data: {
+                                    user_id: localStorage.user_id,
+                                }
+
+                });
+            } else {
+                $("#signIn").show();
+            }
+        })
+
+        $("#signInBtn").on('click', function() {
+            $("#signUp").hide();
+            $("#signIn").show();
+            $("#Back").show();
+        })
+        
+        $("#reg1").on('click',function(){
+             $("#signIn").hide();
+            $("#signUp").show();
+            $("#Back").show();
+        })
+
+        $("#Back").on('click', function() {
+            $("#signIn").show();
+            $("#signUp").hide();
+            $("#Back").hide();
+        })
+
+        $("#reg").on('click', function() {
+            if ($("#name").val() == "" || $("#name").val() == " " || $("#pho").val() == "" || $("#pho").val() == " " || $("#password").val() == "" || $("#password").val() == " ") {
+                alert("NE vse zapolnil!");
+            } else {
+                //$("#reg").hide();
+                $.ajax({
+                    url: 'http://127.0.0.1:8000/registr',
+                    success: function(data) {
+                        console.log(data);
+                        localStorage.setItem("user_id", data);
+                        window.location = 'role_form.html';
+
+                    },
+                    data: {
+                        login: $("#name").val(),
+                        password: $("#password").val(),
+                        email: $("#pho").val(),
+                    }
+                });
+            }
+
+
+        })
+
+        $("#signBtn").on('click', function() {
+            if ($("#log").val() == "" || $("#log").val() == " " || $("#pass").val() == "" || $("#pass").val() == " ") {
+                alert("NE vse zapolnil!");
+            } else {
+                //$("#reg").hide();
+                $.ajax({
+                    url: 'http://127.0.0.1:8000/signIn',
+                    success: function(data) {
+                        console.log(data);
+                        if (data.length == 0) {
+                            alert("вы неправильно ввели логин или пароль")
+                        } else {
+                            localStorage.setItem("user_id", data[0]["id"]);
+                            $.ajax({
+                                url: 'http://127.0.0.1:8000/getRole',
+                                success: function(data) {
+                                    console.log(data);
+                                    if(data.length==0){
+                                       window.location='role_form.html';
+                                    }
+                                    else{
+                                       if(data[0]["role"]==0){
+                                        window.location="searchWorker.html"
+                                    }
+                                    else{
+                                         window.location="searchWork.html"
+                                    }
+                                    }
+                                },
+                                data: {
+                                    user_id: localStorage.user_id,
+                                }
+
+                            });
+                            
+                        }
+
+
+
+
+
+                    },
+                    data: {
+                        log: $("#log").val(),
+                        pass: $("#pass").val(),
+                    }
+                });
+            }
+        })
+
+    </script>
+</body>
+
+</html>
